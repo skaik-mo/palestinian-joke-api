@@ -1,28 +1,15 @@
-# Palestinian Joke API — The Chance World Cup (Round 1 Task)
+# Palestinian Joke API — The Chance World Cup
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Deployment Status](https://img.shields.io/badge/Deployment-Live-brightgreen.svg)]()
 
-A lightweight, deployed API built for **The Chance World Cup (Round 1 Task)**. This API connects to an LLM to dynamically generate jokes in the local Palestinian dialect based on a single user-provided keyword.
+A lightweight, deployed API and interactive web application built for **The Chance World Cup (Round 1 Task)**. This project connects to an LLM via OpenRouter to dynamically generate context-aware jokes strictly in the local Palestinian dialect based on a single user-provided keyword.
 
 ---
 
-## 📖 Overview
+## 🎭 Web Interface
 
-The goal of this project is to build and deploy a stateless endpoint that generates context-aware, non-racist humor on demand using an AI integration rather than a pre-defined, hardcoded database.
-
-### Core Features
-* **Dynamic Generation:** Integrates an LLM (Gemini) to generate fresh jokes on the fly.
-* **Local Dialect:** Delivers jokes strictly in the local Palestinian dialect.
-* **Keyword Matching:** Tailors the humor based on a single search term query parameter.
-
----
-
-## 🛠️ Tech Stack
-
-* **Language/Framework:** Node.js with Express.js (or equivalent backend framework)
-* **AI Integration:** Gemini API (Google Generative AI SDK)
-* **Deployment Platform:** Deployed via a free cloud host (e.g., Vercel, Render)
+When opening the root URL (`/`), an interactive, responsive Palestinian dialect comedy UI (**بارق**) is presented. Users can enter any word or pick a suggested topic to get an instant joke with smooth animations, copy buttons, and real-time feedback.
 
 ---
 
@@ -30,76 +17,106 @@ The goal of this project is to build and deploy a stateless endpoint that genera
 
 ### Live Endpoint
 * **Method:** `GET`
-* **Path Pattern:** `/api/mohammed-skaik/joke` *(Note: Author's name is explicitly in the route path)*
-
----
+* **Path Pattern:** `/api/mohammed-skaik/joke`
 
 ### Request Parameters
 | Parameter | Type | Required | Description |
 | :--- | :--- | :--- | :--- |
-| `word` | String | Yes | The single word the joke will be centered around. |
-
----
+| `word` | String | Yes | Single Arabic keyword for the joke (e.g. `قهوة`, `مدرسة`, `شغل`) |
 
 ### Example Request
 ```bash
-GET https://<deployed-url>/api/mohammed-skaik/joke?keyword=قهوة
+GET https://<deployed-url>/api/mohammed-skaik/joke?word=قهوة
 ```
----
 
 ### Example JSON Response
-```bash
+```json
 {
-  "status": "success",
-  "keyword": "قهوة",
+  "success": true,
   "joke": "مرة قهوة راحت تتقدم لشاي، قالها أبوها: لسه بدري عليكي تغلي! 😂"
 }
 ```
+
+---
+
+## 🛠️ Tech Stack
+
+* **Runtime:** Node.js (ES Modules)
+* **Framework:** Express.js
+* **AI Provider:** OpenRouter API (Multi-model fallback)
+* **Frontend:** Vanilla HTML5 / CSS3 / JavaScript (Served directly from `public/`)
+
 ---
 
 ## 📁 Project Structure
 
-Below is an overview of the structural layout optimized for open-source scalability:
-
 ```text
-Palestinian-joke-api/
-├── .github/
-│   └── workflows/          
-├── src/                    
-│   ├── config/               
-│   │   └── env.js   
+joke-api/
+├── public/
+│   └── index.html          # Interactive comedy web UI
+├── src/
+│   ├── config/
+│   │   └── env.js          # Environment configuration
 │   ├── controllers/
 │   │   └── joke.controller.js
 │   ├── middlewares/
-│   │   └── errorHandler.js
+│   │   ├── errorHandler.js
 │   │   └── notFound.js
 │   ├── routes/
 │   │   └── joke.routes.js
 │   ├── utils/
-│   │   └── joke.service.js
+│   │   ├── joke.service.js
 │   │   └── prompt.builder.js
-│   └── app.js              
-├── index.js                
-├── .gitignore              
-├── package.json            
+│   └── app.js              # Express app with static & API routing
+├── index.js                # Server entry point
+├── vercel.json             # Vercel deployment config
+├── .gitignore
+├── package.json
 └── README.md
 ```
-## Setup Instructions
-### 1. Clone and install dependencies:   
+
+---
+
+## 🚀 Setup & Local Development
+
+### 1. Clone repository & install dependencies
 ```bash
-git clone [https://github.com/skaik-mo/Palestinian-joke-api.git](https://github.com/skaik-mo/Palestinian-joke-api.git)
-cd Palestinian-joke-api
+git clone git@github.com:skaik-mo/joke-api.git
+cd joke-api
 npm install
 ```
 
-
-### 2. Set up environment variables:
-Create a ```.env ``` file in the root directory:
-```bash
+### 2. Configure Environment Variables
+Create `.env.development.local`:
+```env
 PORT=3000
-OPENROUTER_API_KEY=your_actual_api_key_here
+NODE_ENV=development
+OPENROUTER_API_KEY=your_openrouter_api_key_here
 ```
-### 3. Run the server locally:
+
+### 3. Run Locally
 ```bash
 npm run dev
 ```
+Open [http://localhost:3000](http://localhost:3000) to see the web UI, or test the API at:
+[http://localhost:3000/api/mohammed-skaik/joke?word=مدرسة](http://localhost:3000/api/mohammed-skaik/joke?word=مدرسة)
+
+---
+
+## ☁️ Deployment (Getting a Live URL)
+
+### Option A: Render (Recommended for Express)
+1. Go to [Render Dashboard](https://dashboard.render.com/) and click **New Web Service**.
+2. Connect your GitHub repository: `skaik-mo/joke-api`.
+3. Set the following settings:
+   - **Environment:** `Node`
+   - **Build Command:** `npm install`
+   - **Start Command:** `npm start`
+4. Add Environment Variable:
+   - `OPENROUTER_API_KEY`: *(Your OpenRouter API key)*
+5. Click **Deploy Web Service**. Render will generate a public live URL (e.g. `https://joke-api-xxxx.onrender.com`).
+
+### Option B: Vercel
+1. Import the repository in [Vercel](https://vercel.com/new).
+2. Add the environment variable `OPENROUTER_API_KEY`.
+3. Click **Deploy**. Vercel uses `vercel.json` to deploy automatically.

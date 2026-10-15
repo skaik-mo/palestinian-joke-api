@@ -6,3 +6,5 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`http://localhost:${PORT}/api/${USER_NAME}/joke?word=school`);
 });
+
+export default app;
